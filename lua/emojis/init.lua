@@ -134,9 +134,31 @@ P.open_win = function()
 	})
 end
 
+P.format_columns = function(items, column_width, max_columns)
+	local lines = {}
+	local row = {}
+	for i, item in ipairs(items) do
+		-- Add padding to align columns
+		table.insert(row, string.format('%-' .. column_width .. 's', item))
+
+		-- Move to next row after reaching max_columns
+		if #row == max_columns or i == #items then
+			table.insert(lines, table.concat(row, ' '))
+			row = {}
+		end
+	end
+	return lines
+end
+
 P.set_results = function(results, body)
 	vim.api.nvim_set_option_value('modifiable', true, { buf = body.buf })
-	vim.api.nvim_buf_set_lines(body.buf, 1, -1, false, results)
+
+	-- Format emojis into columns
+	local column_width = 6
+	local max_columns = 8
+	local formatted_emojis = P.format_columns(results, column_width, max_columns)
+
+	vim.api.nvim_buf_set_lines(body.buf, 1, -1, false, formatted_emojis)
 	vim.api.nvim_set_option_value('modifiable', false, { buf = body.buf })
 end
 
