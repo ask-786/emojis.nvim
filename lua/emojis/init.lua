@@ -102,9 +102,20 @@ P.open_win = function()
 		vim.api.nvim_set_current_win(body.win)
 	end, { buffer = header.buf })
 
+	vim.keymap.set('n', '<C-j>', function()
+		vim.api.nvim_set_current_win(header.win)
+	end, { buffer = body.buf })
+
 	vim.keymap.set('n', '<C-k>', function()
 		vim.api.nvim_set_current_win(header.win)
 	end, { buffer = body.buf })
+
+	vim.keymap.set('n', '<C-k>', function()
+		vim.api.nvim_set_current_win(body.win)
+	end, { buffer = header.buf })
+
+	vim.keymap.set('n', 'l', 'w', { buffer = body.buf, noremap = true })
+	vim.keymap.set('n', 'h', 'b', { buffer = body.buf, noremap = true })
 
 	local results = P.search_emojis('')
 	P.set_results(results, body)
